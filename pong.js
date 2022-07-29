@@ -1,6 +1,11 @@
-let canvas = document.getElementById("gameCanvas");
-let ctx = canvas.getContext("2d")
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d")
+const canvasWidth = 600;
+const canvasHeight = 600;
 
+function randomNumber(min, max) {
+    return Math.random() * (max - min) + min
+}
 
 class Ball {
     constructor() {
@@ -25,13 +30,13 @@ class Ball {
         if (this.x <= (0 + this.radius)) {
             this.xVelocity *= -1;
         }
-        if (this.x + this.radius >= 600) {
+        if (this.x + this.radius >= canvasWidth) {
             this.xVelocity *= -1;
         }
         if (this.y <= (0 + this.radius)) {
             this.yVelocity *= -1;
         }
-        if (this.y + this.radius >= 600) {
+        if (this.y + this.radius >= canvasHeight) {
             gameOver();
             this.yVelocity *= -1;
         }
@@ -42,8 +47,8 @@ class Paddle {
     constructor() {
         this.width = 100;
         this.height = 20;
-        this.x = 300 - this.width/2;
-        this.y = 600 - this.height;
+        this.x = canvasWidth/2 - this.width/2;
+        this.y = canvasHeight - this.height;
         this.xVelocity = 0;
     }
     
@@ -56,7 +61,7 @@ class Paddle {
     }
 
     move() {
-        if (this.x <= 0  && this.xVelocity == -1 || this.x + this.width >= 600 && this.xVelocity == 1) {
+        if (this.x <= 0  && this.xVelocity == -1 || this.x + this.width >= canvasWidth && this.xVelocity == 1) {
             return;
         }
         this.x += this.xVelocity;
@@ -85,14 +90,14 @@ let paddle = new Paddle();
 window.addEventListener('keydown', (event) => paddle.changeDirection(event.key));
 window.addEventListener('keyup', (event) => paddle.stopMoving(event.key))
 setInterval(() => {
-    ctx.clearRect(0, 0, 600, 600);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     ball.move();
     ball.draw();
     paddle.move();
     paddle.draw();
     if (ball.y + ball.radius == paddle.y && ball.x >= paddle.x && ball.x <= paddle.x + paddle.width) {
         ball.yVelocity = -1;
-        ball.xVelocity = ((Math.random() * 4) -2)
+        ball.xVelocity = randomNumber((ball.xVelocity - 1 < -2) ? -2 : ball.xVelocity -1, (ball.xVelocity + 1 > 2) ? 2 : ball.xVelocity + 1)
     }
     if (ball.y + ball.radius > paddle.y && ball.x + ball.radius > paddle.x && ball.x < paddle.x + paddle.width/2) {
         ball.yVelocity = -1;
