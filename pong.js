@@ -101,7 +101,6 @@ let paddle = new Paddle();
 window.addEventListener('keydown', (event) => {
     console.log(event.key)
     if (event.key == " " && !running) {
-        ball.xVelocity = 1;
         ball.yVelocity = 1;
         running = true;
     }
